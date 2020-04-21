@@ -5,11 +5,11 @@ set -e
 # TODO: Set to URL of git repo.
 PROJECT_GIT_URL='https://github.com/SunnyChopper/evamony-django.git'
 
-PROJECT_BASE_PATH='/usr/local/apps/ev'
+PROJECT_BASE_PATH='/usr/local/apps/evamony-django'
 
 echo "Installing dependencies..."
-sudo yum update -y
-sudo yum install -y python3-dev python3-venv mysql57-server python-pip supervisor httpd git
+apt-get update
+apt-get install -y python3-dev python3-venv mysql python-pip supervisor nginx git
 
 # Create project directory
 mkdir -p $PROJECT_BASE_PATH
@@ -29,15 +29,15 @@ $PROJECT_BASE_PATH/env/bin/python manage.py migrate
 $PROJECT_BASE_PATH/env/bin/python manage.py collectstatic --noinput
 
 # Configure supervisor
-cp $PROJECT_BASE_PATH/deploy/supervisor_ev.conf /etc/supervisor/conf.d/ev.conf
+cp $PROJECT_BASE_PATH/deploy/supervisor_evamony-django.conf /etc/supervisor/conf.d/evamony-django.conf
 supervisorctl reread
 supervisorctl update
-supervisorctl restart ev
+supervisorctl restart evamony-django
 
 # Configure nginx
-#cp $PROJECT_BASE_PATH/deploy/nginx_profiles_api.conf /etc/nginx/sites-available/profiles_api.conf
-#rm /etc/nginx/sites-enabled/default
-#ln -s /etc/nginx/sites-available/profiles_api.conf /etc/nginx/sites-enabled/profiles_api.conf
-#systemctl restart nginx.service
+cp $PROJECT_BASE_PATH/deploy/nginx_evamony-django.conf /etc/nginx/sites-available/evamony-django.conf
+rm /etc/nginx/sites-enabled/default
+ln -s /etc/nginx/sites-available/evamony-django.conf /etc/nginx/sites-enabled/evamony-django.conf
+systemctl restart nginx.service
 
 echo "DONE! :)"
