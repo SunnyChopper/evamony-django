@@ -9,7 +9,7 @@ PROJECT_BASE_PATH='/usr/local/apps/evamony-django'
 
 echo "Installing dependencies..."
 apt-get update
-apt-get install -y python3-dev python3-venv mysql python-pip supervisor nginx git
+apt-get install -y python3-dev python3-venv mysql-server python-pip supervisor nginx git
 
 # Create project directory
 mkdir -p $PROJECT_BASE_PATH
